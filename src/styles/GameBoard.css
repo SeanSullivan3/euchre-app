@@ -1,0 +1,51 @@
+
+
+.gameBoard {
+    height: 600px;
+    width: 600px;
+    background: rgb(59, 73, 197);
+    display: grid;
+    grid-template-columns: 200px 200px 200px;
+    grid-template-rows: 200px 200px 200px;
+    margin: 0 auto;
+}
+
+.player {
+    border: 2px solid white;
+    display: flex;
+    align-items: center;
+}
+
+.center {
+    align-items: center;
+}
+
+.btnDeal {
+    margin-top: 40%;
+    width: 100px;
+    height: 50px;
+    background-color: rgb(255, 102, 102);
+    border: 1px solid white;
+    border-radius: 5px;
+    color: white;
+}
+
+.info-p3 {
+    text-align: right;
+}
+
+.info-p4 {
+    text-align: right;
+    transform: rotate(90deg);
+}
+
+.info-p1 {
+    margin-top: auto;
+    text-align: left;
+}
+
+.info-p2 {
+    transform: rotate(-90deg);
+    text-align: right;
+    
+}
