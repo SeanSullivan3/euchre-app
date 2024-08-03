@@ -35,4 +35,10 @@ export function deal(deck, dealer) {
         dealThree = turn === dealer ? false : !dealThree;
         turn = increment(turn);
     }
+
+    return playerHands;
+}
+
+export function sortHand(hand, trump) {
+    
 }

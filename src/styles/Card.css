@@ -1,0 +1,31 @@
+
+.cardp1 {
+    height: 160px;
+    margin: 0 auto auto;
+}
+
+.cardp1:hover {
+    cursor: pointer;
+    transform: scale(1.1);
+    
+}
+
+.cardp2 {
+    height: 160px;
+    margin-left: 27px;
+}
+
+.cardp3 {
+    height: 160px;
+    transform: rotate(180deg);
+    margin: auto auto 0;
+}
+
+.cardp4 {
+    height: 160px;
+    margin-left: 21px;
+}
+
+.cardcalling {
+    height: 160px;
+}

@@ -1,27 +1,19 @@
 import React from "react";
+import "../styles/Card.css";
 
 export default function Cardsvg(props) {
     const name = props.name;
     const player = props.player;
 
-    var style;
+    var style = {};
 
-    if (player === 'p1') {
-        style = {height: '80%', margin: '0 auto auto'}
+    if (player === 'p2') {
+        style = {transform: 'rotate(90deg)'};
     }
-    else if (player === 'p2') {
-        style = {height: '80%', transform: 'rotate(90deg)', margin: '0 0 0 30%'}
-    }
-    else if (player === 'p3') {
-        style = {height: '80%', transform: 'rotate(180deg)', margin: 'auto auto 0'}
-    }
-    else if (player === 'p4') {
-        style = {height: '80%', transform: 'rotate(270deg)', margin: '0 0 0 10%'}
-    }
-    else {
-        style = {height: '80%'}
+    if (player === 'p4') {
+        style = {transform: 'rotate(-90deg)'};
     }
     
-    console.log(`/images/${name}.svg`);
-    return <img style={style} src={`/images/${name}.svg`} alt={`${player}`}></img>;
+    return <img className={`card${player}`} style={style} src={`/images/${name}.svg`} alt={`${player}`} onClick={() => props.handleClick(name)}></img>;
 }
+ 

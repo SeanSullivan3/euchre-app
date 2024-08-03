@@ -1,4 +1,11 @@
 
+.container {
+    height: 600px;
+    width: 1000px;
+    display: grid;
+    grid-template-columns: 200px 600px 200px;
+    margin: 0 auto;
+}
 
 .gameBoard {
     height: 600px;
@@ -14,6 +21,39 @@
     border: 2px solid white;
     display: flex;
     align-items: center;
+    display: flex;
+    flex-direction: column;
+}
+
+.vert {
+    writing-mode: vertical-lr;
+}
+
+.blue {
+    color:rgb(0, 200, 255)
+}
+
+.red {
+    color: rgb(255, 100, 139);
+}
+
+.name-p1 {
+    margin-top: auto;
+    color:rgb(0, 200, 255)
+}
+
+.name-p2 {
+    color: rgb(255, 100, 139);
+}
+
+.name-p3 {
+    color:rgb(0, 200, 255)
+}
+
+.name-p4 {
+    transform: rotate(180deg);
+    margin-left: auto;
+    color: rgb(255, 100, 139);
 }
 
 .center {
@@ -35,8 +75,8 @@
 }
 
 .info-p4 {
-    text-align: right;
-    transform: rotate(90deg);
+    text-align: left;
+    transform: rotate(180deg);
 }
 
 .info-p1 {
@@ -45,7 +85,17 @@
 }
 
 .info-p2 {
-    transform: rotate(-90deg);
-    text-align: right;
-    
+    text-align: left;
+}
+
+.scoring-container {
+    display: grid;
+    grid-template-columns: 250px 600px 250px;
+    margin: 0 auto;
+}
+
+.score {
+    display: flex;
+    flex-direction: column;
+    padding-top: 20px;
 }

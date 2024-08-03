@@ -1,0 +1,33 @@
+
+.handp1 {
+    width: 600px;
+    height: 200px;
+    display: flex;
+    flex-direction: row;
+    margin: 0 auto;
+}
+
+.handp2 {
+    width: 200px;
+    height: 600px;
+    display: grid;
+    grid-template-rows: 120px 120px 120px 120px 120px;
+    transform: translate(0px,-20px);
+    padding-left: 33px;
+}
+
+.handp3 {
+    width: 600px;
+    height: 200px;
+    display: flex;
+    flex-direction: row;
+    margin: 0 auto;
+}
+
+.handp4 {
+    width: 200px;
+    height: 600px;
+    display: grid;
+    grid-template-rows: 120px 120px 120px 120px 120px;
+    transform: translate(0px,-20px);
+}
