@@ -70,6 +70,14 @@
     color: white;
 }
 
+.btnChoice {
+    margin-top: auto;
+    background-color: rgb(255, 102, 102);
+    border: 1px solid white;
+    border-radius: 5px;
+    color: white;
+}
+
 .info-p3 {
     text-align: right;
 }
