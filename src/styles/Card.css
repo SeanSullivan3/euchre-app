@@ -1,29 +1,42 @@
 
+.card-containerp1 {
+    width: 80px;
+}
+.card-containerp2 {
+    height: 80px;
+}
+.card-containerp3 {
+    margin-top: auto;
+    width: 80px;
+}
+.card-containerp4 {
+    height: 80px;
+}
+
 .cardp1 {
     height: 160px;
-    margin: 0 auto auto;
+    transform: translate(-20px, 5px);
 }
 
 .cardp1:hover {
     cursor: pointer;
     transform: scale(1.1);
-    
+    transition: ease 0.3s;
 }
 
 .cardp2 {
     height: 160px;
-    margin-left: 27px;
+    transform: rotate(90deg) translate(-40px, -20px);
 }
 
 .cardp3 {
     height: 160px;
-    transform: rotate(180deg);
-    margin: auto auto 0;
+    transform: rotate(180deg) translate(20px);
 }
 
 .cardp4 {
     height: 160px;
-    margin-left: 21px;
+    transform: rotate(-90deg) translate(40px, 28px);
 }
 
 .cardcalling {

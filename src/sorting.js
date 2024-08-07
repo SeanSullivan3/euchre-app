@@ -91,33 +91,38 @@ export function sortHand(hand, trump) {
     diamonds = rankSuit(diamonds, trump);
     hearts = rankSuit(hearts, trump);
     spades = rankSuit(spades, trump);
-
+    /*
+    console.log(`Clubs ${clubs}`);
+    console.log(`Diamonds ${diamonds}`);
+    console.log(`Hearts ${hearts}`);
+    console.log(`Spades ${spades}`);
+    */
     var sortedHand = []
     if (trump !== 'c') {
-        sortedHand.concat(clubs);
+        sortedHand = sortedHand.concat(clubs);
     }
     if (trump !== 'd') {
-        sortedHand.concat(diamonds);
+        sortedHand = sortedHand.concat(diamonds);
     }
     if (trump !== 'h') {
-        sortedHand.concat(hearts);   
+        sortedHand = sortedHand.concat(hearts);   
     }
     if (trump !== 's') {
-        sortedHand.concat(spades);
+        sortedHand = sortedHand.concat(spades);
     }
     if (trump === 'c') {
-        sortedHand.concat(clubs);
+        sortedHand = sortedHand.concat(clubs);
     }
     else if (trump === 'd') {
-        sortedHand.concat(diamonds);
+        sortedHand = sortedHand.concat(diamonds);
     }
     else if (trump === 'h') {
-        sortedHand.concat(hearts);
+        sortedHand = sortedHand.concat(hearts);
     }
     else if (trump === 's') {
-        sortedHand.concat(spades);
+        sortedHand = sortedHand.concat(spades);
     }
-    console.log(sortedHand);
+    //console.log(sortedHand);
     return sortedHand;
 }
 

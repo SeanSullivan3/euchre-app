@@ -19,7 +19,6 @@
 
 .player {
     border: 2px solid white;
-    display: flex;
     align-items: center;
     display: flex;
     flex-direction: column;
@@ -58,6 +57,19 @@
 
 .center {
     align-items: center;
+    display: flex;
+    flex-direction: column;
+}
+
+.call-choices {
+    margin-top: auto;
+    display: flex;
+    flex-direction: row;
+}
+
+.info {
+    margin: auto auto 0 auto;
+    font-size: 20px;
 }
 
 .btnDeal {

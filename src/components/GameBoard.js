@@ -2,12 +2,13 @@ import React, { useState, useEffect } from "react";
 import "../styles/GameBoard.css";
 import { shuffle, deal, sortHand, removeCard } from "../sorting.js";
 import { makeCall, exchangeCallCard, playAlone, playCard } from "../ai.js";
-import { Card, getDeck, increment, getValidCalls, getSuit, isValidPlay, getPartner, getTrickWinner } from "../gameLogic.js";
+import { Card, getDeck, increment, decrement, getValidCalls, getSuit, isValidPlay, getPartner, getTrickWinner } from "../gameLogic.js";
 import Cardsvg from "./Card.js";
 import Hand from "./Hand.js";
 
 const deck = getDeck();
 
+const botDelay = 1000;
 
 export default function GameBoard() {
     const [p1GameScore, setP1GameScore] = useState(0);
@@ -28,11 +29,11 @@ export default function GameBoard() {
     const [p3Card, setP3Card] = useState('none');
     const [p4Card, setP4Card] = useState('none');
     const [playerHands, setPlayerHands] = useState([[],[],[],[]]);
-    const [choice, setChoice] = useState('none');
+    const [choice, setChoice] = useState('Dealt');
     const [roundHistory, setRoundHistory] = useState([]);
 
     const startDeal = () => {
-        var shuffled = shuffle(deck);
+        var shuffled = [...shuffle(deck)];
 
         setPlayerHands(deal(shuffled, dealer));
 
@@ -76,52 +77,61 @@ export default function GameBoard() {
         }
     }
 
-    const nextTurn = () => {
-        setTurn(increment(turn))
+    function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
     }
 
-    function callTurn(call) {
-        setChoice(call);
+    async function callTurn(call) {
         if (call !== 'pass') {
             setMakers(turn % 2 == 1 ? 'P1 & P3' : 'P2 & P4');
             if (call === 'pick') {
+                setChoice('Pick it up!');
                 setTrump(getSuit(callCard));
                 setRound('exchanging');
             }
             else if (call !== 'none') {
+                setChoice(call.toUpperCase());
                 setTrump(call);
-                //setPlayerHands([sortHand(playerHands[0], call.charAt(0)), playerHands[1], playerHands[2], playerHands[3]]);
+                setPlayerHands([sortHand(playerHands[0], call.charAt(0)), playerHands[1], playerHands[2], playerHands[3]]);
                 setRound('go_alone');
             }
         }
         else {
+            if (turn !== 1) {
+                await sleep(botDelay);
+                setTurn(increment(turn));
+            }
+            else {
+                setTurn(increment(turn));
+            }
             if (turn === dealer) {
                 setFaceUp(false);
                 setValidCalls(getValidCalls(callCard));
             }
-            if (turn !== 1) {
-                setTimeout(nextTurn, 1000);
-            }
-            else {
-                nextTurn();
-            }
+            setChoice('Pass');
         }
     }
 
-    function exchange(playerHands) {
-        console.log(playerHands)
+    async function exchange(playerHands) {
+        if (dealer !== 1) {
+            await sleep(botDelay);
+        }
         setPlayerHands([sortHand(playerHands[0], trump.charAt(0)), playerHands[1], playerHands[2], playerHands[3]]);
         setRound('go_alone');
     }
 
-    function goAlone(alone) {
+    async function goAlone(alone) {
+        if (turn !== 1) {
+            await sleep(botDelay / 2);
+        }
         setPlayerAlone(alone);
         if (alone !== 0) {
-            console.log('playing alone');
+            setChoice('Playing Alone');
             let newHands = playerHands;
             newHands[getPartner(alone) - 1] = [];
             setPlayerHands(newHands);
         }
+        setChoice('Playing');
         setRound('playing');
         if (getPartner(alone) !== increment(dealer)) {
             setTurn(increment(dealer));
@@ -131,62 +141,160 @@ export default function GameBoard() {
         }
     }
 
-    function playTurn(card) {
-        console.log('Playing Turn');
-        if (turn === 1) {
-            setP1Card(card);
-        }
-        else if (turn === 2) {
-            setP1Card(card);
-        }
-        else if (turn === 3) {
-            setP1Card(card);
-        }
-        else if (turn === 4) {
-            setP1Card(card);
-        }
+    async function playTurn(card) {
+        console.log('Playing Turn ' + card);
 
-        var newRoundHistory = roundHistory;
-        newRoundHistory.push(card);
-        setRoundHistory(newRoundHistory);
-        
+        var newRoundHistory = [...roundHistory, card];
+
         let newHands = playerHands;
         newHands[turn - 1] = removeCard(newHands[turn - 1], card);
-        setPlayerHands(newHands);
-        console.log(newHands);
 
         if (newRoundHistory.length % 4 === 0) {
+            if (turn !== 1) {
+                await sleep(botDelay);
+            }
             let trickWinner = getTrickWinner(newRoundHistory, trump.charAt(0), turn);
-            if (trickWinner === 1 || trickWinner === 3) {
-                setP1TrickScore(p1TrickScore + 1);
-            }
-            else {
-                setP2TrickScore(p2TrickScore + 1);
-            }
-            setP1Card('none');
-            setP2Card('none');
-            setP3Card('none');
-            setP4Card('none');
-            setTimeout(setTurn(trickWinner), 3000);
+            setTurn(trickWinner);
+            setChoice('Wins');
+            setRound('reset_trick');
         }
         else {
             if (increment(turn) === getPartner(playerAlone)) {
                 if (turn !== 1) {
-                    setTimeout(setTurn(increment(increment(turn))), 1000);
+                    await sleep(botDelay);
+                    setTurn(increment(increment(turn)));
+                    newRoundHistory.push('none');
                 }
                 else {
                     setTurn(increment(increment(turn)));
+                    newRoundHistory.push('none');
                 }
             }
             else {
                 if (turn !== 1) {
-                    console.log('NextTurn');
-                    setTimeout(nextTurn, 1000);
+                    await sleep(botDelay);
+                    setTurn(increment(turn));
                 }
                 else {
-                    nextTurn();
+                    setTurn(increment(turn));
                 }
             }
+        }
+
+
+        if (turn === 1) {
+            setP1Card(card);
+        }
+        else if (turn === 2) {
+            setP2Card(card);
+        }
+        else if (turn === 3) {
+            setP3Card(card);
+        }
+        else if (turn === 4) {
+            setP4Card(card);
+        }
+        setRoundHistory(newRoundHistory);
+        setPlayerHands(newHands);
+    }
+
+    async function resetTrick() {
+        await sleep(3000);
+        var newP1TrickScore = p1TrickScore;
+        var newP2TrickScore = p2TrickScore;
+        if (turn === 1 || turn === 3) {
+            setP1TrickScore(p1TrickScore + 1);
+            newP1TrickScore++;
+        }
+        else {
+            setP2TrickScore(p2TrickScore + 1);
+            newP2TrickScore++;
+        }
+        if (newP1TrickScore + newP2TrickScore === 5) {
+            setRound('reset_round');
+            setChoice(newP1TrickScore > newP2TrickScore ? 'P1 & P3 Win Round' : 'P1 & P3 Win Round');
+        }
+        else {
+            setChoice('Playing');
+            setRound('playing');
+        }
+        setP1Card('none');
+        setP2Card('none');
+        setP3Card('none');
+        setP4Card('none');
+    }
+
+    async function resetRound() {
+        await sleep(3000);
+        var newP1GameScore = p1GameScore;
+        var newP2GameScore = p2GameScore;
+        if (p1TrickScore > p2TrickScore) {
+            if (p1TrickScore === 5) {
+                if (playerAlone === 1 || playerAlone === 3) {
+                    setP1GameScore(p1GameScore + 4);
+                    newP1GameScore += 4;
+                }
+                else {
+                    setP1GameScore(p1GameScore + 2);
+                    newP1GameScore += 2;
+                }
+            }
+            else {
+                if (makers === 'P1 & P3') {
+                    setP1GameScore(p1GameScore + 1);
+                    newP1GameScore += 1;
+                }
+                else {
+                    setP1GameScore(p1GameScore + 2);
+                    newP1GameScore += 2;
+                }
+            }
+        }
+        else {
+            if (p2TrickScore === 5) {
+                if (playerAlone === 2 || playerAlone === 4) {
+                    setP2GameScore(p2GameScore + 4);
+                    newP2GameScore += 4;
+                }
+                else {
+                    setP2GameScore(p2GameScore + 2);
+                    newP2GameScore += 2;
+                }
+            }
+            else {
+                if (makers === 'P2 & P4') {
+                    setP2GameScore(p2GameScore + 1);
+                    newP2GameScore += 1;
+                }
+                else {
+                    setP2GameScore(p2GameScore + 2);
+                    newP2GameScore += 2;
+                }
+            }
+        }
+        if (newP1GameScore >= 10) {
+            setRound('game_over');
+            setChoice('P1 & P3 WIN!!!!!');
+        }
+        else if (newP2GameScore >= 10) {
+            setRound('game_over');
+            setChoice('P2 & P4 WIN!!!!!');
+        }
+        else {
+            setRound('dealing');
+            setDealer(increment(dealer));
+            setTurn(increment(increment(dealer)));
+            setPlayerAlone(0);
+            setP1TrickScore(0);
+            setP2TrickScore(0);
+            setTrump('none');
+            setMakers('none');
+            setCallCard('none');
+            setFaceUp(true);
+            setPlayerHands([[],[],[],[]]);
+            setRoundHistory([]);
+            setChoice('dealt');
+            setValidCalls([]);
         }
     }
     
@@ -195,15 +303,21 @@ export default function GameBoard() {
             if (round === 'calling') {
                 callTurn(makeCall(playerHands[turn - 1], turn, dealer, callCard, faceUp));
             }
-            else if (round === 'exchanging') {
-                exchange(exchangeCallCard(playerHands[turn - 1], turn, callCard));
-            }
             else if (round === 'go_alone') {
-                goAlone(playAlone(playerHands[turn - 1], turn, trump, dealer, callCard, faceUp));
+                goAlone(playAlone(playerHands[turn - 1], turn, trump.charAt(0), dealer, callCard, faceUp));
             }
             else if (round === 'playing') {
-                playTurn(playCard(playerHands[turn - 1], turn, roundHistory, trump, makers, callCard, dealer, faceUp, playerAlone));  
+                playTurn(playCard(playerHands[turn - 1], turn, roundHistory, trump.charAt(0), makers, callCard, dealer, faceUp, playerAlone));
             }
+        }
+        if (round === 'exchanging' && dealer !== 1) {
+            exchange(exchangeCallCard(playerHands, dealer, callCard));
+        }
+        if (round === 'reset_trick') {
+            resetTrick();
+        }
+        if (round === 'reset_round') {
+            resetRound();
         }
     });
     
@@ -255,6 +369,15 @@ export default function GameBoard() {
                                 <button className="btnChoice" onClick={() => {choiceFromButton('team')}}>Play with teamate</button>
                             </div>
                         }
+                        {round === 'calling' &&
+                            <div className={`info${decrement(turn) % 2 === 1 ? ' blue' : ' red'}`}>{`P${decrement(turn)}: ${choice}`}</div>
+                        }
+                        {(round === 'exchanging' || round === 'reset_trick')  &&
+                            <div className={`info${turn % 2 === 1 ? ' blue' : ' red'}`}>{`P${turn}: ${choice}`}</div>
+                        }
+                        {round === 'reset_round' &&
+                            <div className={`info${p1TrickScore > p2TrickScore ? ' blue' : ' red'}`}>{choice}</div>
+                        }
                     </div>
                     <div className="player vert">
                         {p4Card !== 'none' && <Cardsvg name={p4Card} player='p4'/>}
@@ -299,7 +422,7 @@ export default function GameBoard() {
                         {" - "}
                         <span className="red">{p2GameScore}</span>
                     </div>
-                    <div>{round}</div>
+                    <div>{round.toUpperCase()}</div>
                 </div>
             </div>
             

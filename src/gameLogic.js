@@ -22,13 +22,16 @@ export function getDeck() {
 
 export function getTrickWinner(roundHistory, trump, turn) {
 
-    var trick = roundHistory.splice(roundHistory.length - 4, 4);
+    var pseudoRoundHistory = [...roundHistory];
+    var trick = pseudoRoundHistory.splice(pseudoRoundHistory.length - 4, 4);
     var leadSuit = trick[0].charAt(0);
     var winningIndex = 0;
 
-    for (let i = 1; i < 4; i++) {
-        if (betterThan(trick[winningIndex], trick[i], leadSuit, trump)) {
-            winningIndex = i;
+    for (let i = 1; i < trick.length; i++) {
+        if (trick[i] !== 'none') {
+            if (betterThan(trick[winningIndex], trick[i], leadSuit, trump)) {
+                winningIndex = i;
+            }
         }
     }
     for (let i = 0; i < winningIndex + 1; i++) {
@@ -49,9 +52,11 @@ export function isValidPlay(card, hand, trump, roundHistory) {
     if (cardsPlayed === 0) {
         return true;
     }
-    var trick = roundHistory.splice(roundHistory.length - cardsPlayed, cardsPlayed);
+    var pseudoRoundHistory = [...roundHistory];
+    var trick = pseudoRoundHistory.splice(pseudoRoundHistory.length - cardsPlayed, cardsPlayed);
     var leadSuit = isTrump(trick[0], trump) ? trump : trick[0].charAt(0);
     var hasLeadSuit = false;
+    console.log(`Cards played: ${cardsPlayed} Lead suit: ${leadSuit} Card ${card}`);
     for (let i  = 0; i < hand.length; i++) {
         if (hand[i].toString() === getLeft(trump)) {
             hasLeadSuit = leadSuit === trump;
@@ -72,8 +77,12 @@ export function isValidPlay(card, hand, trump, roundHistory) {
     return true;
 }
 
-export function increment(prev) {
-    return (prev + 1 > 4) ? 1 : prev + 1;
+export function increment(turn) {
+    return (turn + 1 > 4) ? 1 : turn + 1;
+}
+
+export function decrement(turn) {
+    return (turn - 1 < 1) ? 4 : turn - 1;
 }
 
 export function getSuit(card) {

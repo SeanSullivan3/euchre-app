@@ -4,16 +4,16 @@
     height: 200px;
     display: flex;
     flex-direction: row;
-    margin: 0 auto;
+    justify-content: center;
 }
 
 .handp2 {
     width: 200px;
     height: 600px;
-    display: grid;
-    grid-template-rows: 120px 120px 120px 120px 120px;
-    transform: translate(0px,-20px);
-    padding-left: 33px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    transform: translate(-8px);
 }
 
 .handp3 {
@@ -22,12 +22,14 @@
     display: flex;
     flex-direction: row;
     margin: 0 auto;
+    justify-content: center;
 }
 
 .handp4 {
     width: 200px;
     height: 600px;
-    display: grid;
-    grid-template-rows: 120px 120px 120px 120px 120px;
-    transform: translate(0px,-20px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    transform: translate(-40px);
 }
