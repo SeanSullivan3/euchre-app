@@ -50,8 +50,7 @@ export function removeCard(hand, card) {
     return hand;
 }
 
-export function sortHand(hand, trump) {
-    
+export function separateHand(hand, trump) {
     var clubs = [];
     var diamonds = [];
     var hearts = [];
@@ -87,10 +86,17 @@ export function sortHand(hand, trump) {
             }
         }
     }
-    clubs = rankSuit(clubs, trump);
-    diamonds = rankSuit(diamonds, trump);
-    hearts = rankSuit(hearts, trump);
-    spades = rankSuit(spades, trump);
+    return [clubs, diamonds, hearts, spades];
+}
+
+export function sortHand(hand, trump) {
+    
+    var suits = separateHand(hand, trump);
+
+    var clubs = rankSuit(suits[0], trump);
+    var diamonds = rankSuit(suits[1], trump);
+    var hearts = rankSuit(suits[2], trump);
+    var spades = rankSuit(suits[3], trump);
     /*
     console.log(`Clubs ${clubs}`);
     console.log(`Diamonds ${diamonds}`);

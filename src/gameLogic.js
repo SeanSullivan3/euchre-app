@@ -21,7 +21,6 @@ export function getDeck() {
 }
 
 export function getTrickWinner(roundHistory, trump, turn) {
-
     var pseudoRoundHistory = [...roundHistory];
     var trick = pseudoRoundHistory.splice(pseudoRoundHistory.length - 4, 4);
     var leadSuit = trick[0].charAt(0);
@@ -38,6 +37,23 @@ export function getTrickWinner(roundHistory, trump, turn) {
         turn = increment(turn);
     }
     return turn;
+}
+
+export function getCurrentWinner(trick, trump, turn) {
+    if (trick.length === 1) {
+        return decrement(turn);
+    }
+    var leadSuit = trick[0].charAt(0);
+    var winningIndex = 0;
+
+    for (let i = 1; i < trick.length; i++) {
+        if (trick[i] !== 'none') {
+            if (betterThan(trick[winningIndex], trick[i], leadSuit, trump)) {
+                winningIndex = i;
+            }
+        }
+    }
+    return winningIndex;
 }
 
 export function getValidCalls(callCard) {
@@ -119,6 +135,9 @@ export function isTrump(card, trump) {
     
 }
 
+/*
+Returns true if card2 is better than card1, false if otherwise
+*/
 export function betterThan(card1, card2, leadSuit, trump) {
 
     var card1IsTrump = isTrump(card1, trump);
